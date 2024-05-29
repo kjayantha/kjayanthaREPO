@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CycloneDxInfoContributor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">petclinic</a> &gt; <a href="index.source.html" class="el_package">org.springframework.samples.petclinic</a> &gt; <span class="el_source">CycloneDxInfoContributor.java</span></div><h1>CycloneDxInfoContributor.java</h1><pre class="source lang-java linenums">package org.springframework.samples.petclinic;
+
+import java.io.InputStream;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.info.Info;
+import org.springframework.boot.actuate.info.InfoContributor;
+import org.springframework.core.io.Resource;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
+
+@Component
+class CycloneDxInfoContributor implements InfoContributor, InitializingBean {
+	private final Resource bomFile;
+<span class="fc" id="L19">	private final ObjectMapper objectMapper = new ObjectMapper();</span>
+	private @Nullable JsonNode bom;
+
+<span class="fc" id="L22">	CycloneDxInfoContributor(@Value(&quot;classpath:bom.json&quot;) Resource bomFile) {</span>
+<span class="fc" id="L23">		this.bomFile = bomFile;</span>
+<span class="fc" id="L24">	}</span>
+
+	@Override
+	public void contribute(Info.Builder builder) {
+<span class="nc bnc" id="L28" title="All 2 branches missed.">		if (bom != null) {</span>
+<span class="nc" id="L29">			builder.withDetail(&quot;bom&quot;, bom);</span>
+		}
+<span class="nc" id="L31">	}</span>
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">		if (bomFile.exists()) {</span>
+<span class="fc" id="L36">			try (InputStream is = bomFile.getInputStream()) {</span>
+<span class="fc" id="L37">				this.bom = objectMapper.readTree(is);</span>
+			}
+		}
+<span class="fc" id="L40">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

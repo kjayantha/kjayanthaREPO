@@ -1,0 +1,27 @@
+2024-05-27 11:31:50: *****************************************************************************
+2024-05-27 11:31:50: *                     Started SBOM Collection                               *
+2024-05-27 11:31:50: *****************************************************************************
+2024-05-27 11:31:51: Executing command: cd /Users/kjayantha/Documents/Guardrails/spring-petclinic
+2024-05-27 11:31:52: Executing command: ./gradlew -I /Users/kjayantha/Documents/Guardrails/spring-petclinic/assessment/init.gradle cyclonedxBom -PbomOutputDir=/Users/kjayantha/Documents/Guardrails/spring-petclinic/assessment/sbom
+Downloading https://services.gradle.org/distributions/gradle-8.6-bin.zip
+............10%.............20%............30%.............40%.............50%............60%.............70%.............80%............90%.............100%
+
+Welcome to Gradle 8.6!
+
+Here are the highlights of this release:
+ - Configurable encryption key for configuration cache
+ - Build init improvements
+ - Build authoring improvements
+
+For more details see https://docs.gradle.org/8.6/release-notes.html
+
+Starting a Gradle Daemon (subsequent builds will be faster)
+> Task :cyclonedxBom
+
+BUILD SUCCESSFUL in 3m 42s
+1 actionable task: 1 executed
+2024-05-27 11:35:36: Executing command: rm -rf /Users/kjayantha/Documents/Guardrails/spring-petclinic/assessment/init.gradle
+2024-05-27 11:35:37: Executing command: git config --get remote.origin.url
+2024-05-27 11:35:37: Executing command: git symbolic-ref --short HEAD
+2024-05-27 11:35:37: Executing command: git rev-parse HEAD
+2024-05-27 11:35:38: Executing command: rm -rf /Users/kjayantha/Documents/Guardrails/spring-petclinic/assessment/sbom

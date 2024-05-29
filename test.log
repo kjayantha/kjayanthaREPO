@@ -1,0 +1,152 @@
+Name:             daedalus-68f48bddf5-8gnwz
+Namespace:        hub
+Priority:         0
+Service Account:  daedalus
+Node:             tkg-mgmt-vc-md-0-sx78f-65b5fdd66xc9w6s-ngng2/10.83.50.140
+Start Time:       Mon, 27 May 2024 16:24:37 +0530
+Labels:           app.kubernetes.io/component=daedalus
+                  app.kubernetes.io/instance=daedalus
+                  app.kubernetes.io/managed-by=Helm
+                  app.kubernetes.io/name=daedalus
+                  app.kubernetes.io/part-of=daedalus
+                  app.kubernetes.io/version=0.1.0-SNAPSHOT
+                  helm.sh/chart=daedalus-0.4.1
+                  kapp.k14s.io/app=1716807277356413001
+                  kapp.k14s.io/association=v1.c6edf44e1f11bd964dd94b6cd0242528
+                  pod-template-hash=68f48bddf5
+Annotations:      <none>
+Status:           Running
+IP:               100.96.4.11
+IPs:
+  IP:           100.96.4.11
+Controlled By:  ReplicaSet/daedalus-68f48bddf5
+Init Containers:
+  wait-for-endpoints:
+    Container ID:    containerd://f69cda52bdb49e460542c311d8c186f7e6932a6a3251dd664d67e87a920082f2
+    Image:           gal-docker-local.artifactory.eng.vmware.com/daedalus-boot@sha256:85feb7ec4d13ddeaae6452c738ca0da42878333fceb3de446690933cb0a48cb2
+    Image ID:        gal-docker-local.artifactory.eng.vmware.com/daedalus-boot@sha256:85feb7ec4d13ddeaae6452c738ca0da42878333fceb3de446690933cb0a48cb2
+    Port:            <none>
+    Host Port:       <none>
+    SeccompProfile:  RuntimeDefault
+    Command:
+      bash
+    Args:
+      -ec
+      #!/bin/bash
+      retry_while() {
+        local -r cmd="${1:?cmd is missing}"
+        local -r retries="${2:-12}"
+        local -r sleep_time="${3:-5}"
+        local return_value=1
+        read -r -a command <<< "$cmd"
+        for ((i = 1 ; i <= retries ; i+=1 )); do
+            "${command[@]}" && return_value=0 && break
+            sleep "$sleep_time"
+        done
+        return $return_value
+      }
+      daedalus_endpoint_ready() {
+          local -r host="${1:?Missing host}"
+          local -r port="${2:?Missing port}"
+          # Test the TCP connection with a timeout
+          if timeout 5 bash -c "</dev/tcp/$host/$port"; then
+              return 0
+          else
+              return 1
+          fi
+      }
+      # Set the postgresql endpoint URL
+      psql_host="postgresql"
+      psql_port="5432"
+      echo "Waiting for PostgreSQL @ ${psql_host}:${psql_port}"
+      if ! retry_while "daedalus_endpoint_ready $psql_host $psql_port"; then
+          echo "Could not connect to PostgreSQL" > /dev/stderr
+          exit 1
+      else
+          echo "PostgreSQL ready"
+      fi
+      # Set the trivy endpoint URL
+      trivy_host="daedalus-trivy"
+      trivy_port="4954"
+      echo "Waiting for Trivy @ ${trivy_host}:${trivy_port}"
+      if ! retry_while "daedalus_endpoint_ready $trivy_host $trivy_port"; then
+          echo "Could not connect to Trivy" > /dev/stderr
+          exit 1
+      else
+          echo "Trivy ready"
+      fi
+      
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Mon, 27 May 2024 16:26:40 +0530
+      Finished:     Mon, 27 May 2024 16:26:40 +0530
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     2
+      memory:  2Gi
+    Requests:
+      cpu:        2
+      memory:     2Gi
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-sxn8x (ro)
+Containers:
+  daedalus:
+    Container ID:    containerd://a69c4338d3d9828a439733c57a4ea35437cfa95dc6124484fdcf74ae40b09955
+    Image:           gal-docker-local.artifactory.eng.vmware.com/daedalus-boot@sha256:85feb7ec4d13ddeaae6452c738ca0da42878333fceb3de446690933cb0a48cb2
+    Image ID:        gal-docker-local.artifactory.eng.vmware.com/daedalus-boot@sha256:85feb7ec4d13ddeaae6452c738ca0da42878333fceb3de446690933cb0a48cb2
+    Port:            8080/TCP
+    Host Port:       0/TCP
+    SeccompProfile:  RuntimeDefault
+    State:           Running
+      Started:       Mon, 27 May 2024 20:08:23 +0530
+    Last State:      Terminated
+      Reason:        Error
+      Exit Code:     137
+      Started:       Mon, 27 May 2024 20:03:23 +0530
+      Finished:      Mon, 27 May 2024 20:08:23 +0530
+    Ready:           True
+    Restart Count:   2
+    Limits:
+      cpu:     2
+      memory:  2Gi
+    Requests:
+      cpu:      2
+      memory:   2Gi
+    Liveness:   http-get http://:http/actuator/health/liveness delay=5s timeout=5s period=10s #success=1 #failure=5
+    Readiness:  http-get http://:http/actuator/health/readiness delay=5s timeout=5s period=10s #success=1 #failure=5
+    Environment:
+      SPRING_PROFILES_ACTIVE:                                                                              sm-hub
+      SPRING_DATASOURCE_URL:                                                                               jdbc:postgresql://postgresql:5432/daedalus
+      SPRING_DATASOURCE_USERNAME:                                                                          postgres
+      SPRING_DATASOURCE_PASSWORD:                                                                          <set to the key 'password' in secret 'daedalus-externaldb'>  Optional: false
+      DAEDALUS_EXTENSIONS_TRIVYEXTENSIONDEFINITION_HOOKS_CONTINUOUSSCANHOOK_PROPERTIES_TRIVY_SERVER_HOST:  daedalus-trivy
+      DAEDALUS_EXTENSIONS_TRIVYEXTENSIONDEFINITION_HOOKS_CONTINUOUSSCANHOOK_PROPERTIES_TRIVY_SERVER_PORT:  4954
+      SERVER_PORT:                                                                                         8080
+    Mounts:
+      /tmp from empty-dir (rw,path="tmp-dir")
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-sxn8x (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  empty-dir:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  kube-api-access-sxn8x:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Guaranteed
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:                      <none>
